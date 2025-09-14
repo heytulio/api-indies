@@ -46,3 +46,31 @@ Você pode usar ferramentas como [Postman](https://www.postman.com/), [Insomnia]
     ```bash
     curl http://localhost:8080/api/jogos
     ```
+* **POST - Inserir um novo jogo:**
+    ```bash
+    curl -X POST http://localhost:8080/api/jogos \
+    -H "Content-Type: application/json" \
+    -d '{
+          "nome": "Hollow Knight: Silksong",
+          "ano": 2025
+        }'
+    ```
+
+---
+
+## Workflow de Desenvolvimento (Git)
+
+Para este projeto, optei por utilizar o **GitHub Flow**.
+
+### Por que o GitHub Flow?
+
+O **GitHub Flow** é um workflow simples onde temos poucas branches para gerir e para um problema como uma criação de uma API pequena como essa é o workflow ideal para se utilizar, temos poucas branches a seguir e o metodo de implementação para atingir o CI é fácild e fazer. As principais razões para a escolha foram:
+
+1.  **Simplicidade:** É um modelo muito mais simples que o GitFlow. A regra principal é que a branch `main` deve estar sempre em um estado "deployable" (pronta para ir para produção).
+2.  **Clareza:** Toda nova feature, bugfix ou melhoria é desenvolvida em sua própria branch descritiva (como `feature-indies_post`), criada a partir da `main`. Isso mantém o trabalho isolado e fácil de rastrear.
+3.  **Foco em Pull Requests (PRs):** O trabalho só é mesclado de volta na `main` através de um Pull Request. Isso incentiva a revisão de código (code review) e a discussão sobre as mudanças, garantindo a qualidade do código que entra na base principal.
+4.  **Agilidade:** Permite que as features sejam integradas à `main` assim que estiverem prontas, sem a necessidade de esperar por uma "release" formal, o que acelera o ciclo de desenvolvimento.
+
+Para este projeto, a branch `main` continha apenas o gitignore. E a cada nova funcionalidade (`GET /api/jogos`) e (`POST /api/jogos/add`) foi desenvolvida em uma branch `feature` e, após finalizada e testada, seria integrada à `main` via Pull Request.
+```eof
+
