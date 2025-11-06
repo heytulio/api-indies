@@ -1,0 +1,10 @@
+node_modules/
+coverage/
+dist/
+build/
+*.env
+.env.*
+*.log
+package-lock.json
+.eslintrc.json
+.prettierrc.json

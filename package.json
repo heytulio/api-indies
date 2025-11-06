@@ -5,13 +5,16 @@
   "main": "app.js",
   "scripts": {
     "lint": "eslint .",
-    "format:check":"prettier --check .",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
     "test": "jest",
     "seed": "node ./seed/seed.js",
     "start": "nodemon server.js"
   },
   "jest": {
-    "setupFilesAfterEnv": ["./tests/setup.js"],
+    "setupFilesAfterEnv": [
+      "./tests/setup.js"
+    ],
     "testEnvironment": "node",
     "collectCoverage": true,
     "coverageDirectory": "coverage",
