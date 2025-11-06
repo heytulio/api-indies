@@ -44,6 +44,24 @@ class ControllerJogos {
         .json({ message: "Erro ao adicionar o jogo.", error: error.message });
     }
   }
+
+  async deleteJogo(req, res) {
+    try {
+      const { id } = req.body;
+      if (!id) {
+        return res.status(400).json({ message: "O ID do jogo é obrigatório." });
+      }
+      const jogoDeletado = await Jogo.findByIdAndDelete(id);
+      if (!jogoDeletado) {
+        return res.status(404).json({ message: "Jogo não encontrado." });
+      }
+      return res.status(204).send();
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Erro ao deletar o jogo.", error: error.message });
+    }
+  }
 }
 
 module.exports = new ControllerJogos();
