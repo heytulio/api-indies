@@ -30,7 +30,6 @@ class ControllerJogos {
 
       const novoJogo = await Jogo.create({ nome, ano });
 
-      // Retorna direto o objeto criado (o que os testes estão validando)
       res.status(201).json(novoJogo);
     } catch (error) {
       if (error.name === "ValidationError") {
