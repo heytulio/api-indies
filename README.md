@@ -4,29 +4,32 @@ Esta é uma API REST simples para gerenciar uma coleção de jogos indies, desen
 
 ## Funcionalidades
 
-* `GET /api/jogos`: Retorna uma lista com todos os jogos.
+- `GET /api/jogos`: Retorna uma lista com todos os jogos.
 
 ## Como Executar a API
 
 ### Pré-requisitos
 
-* [Node.js](https://nodejs.org/) (versão 14 ou superior)
-* [npm](https://www.npmjs.com/) (geralmente vem com o Node.js)
+- [Node.js](https://nodejs.org/) (versão 14 ou superior)
+- [npm](https://www.npmjs.com/) (geralmente vem com o Node.js)
 
 ### Passos para Execução
 
 1.  **Clone o repositório:**
+
     ```bash
     git clone https://github.com/heytulio/api-jogos.git
     cd api-jogos
     ```
 
 2.  **Instale as dependências:**
+
     ```bash
     npm install
     ```
 
 3.  **Configure o .env baseado no exemplo:**
+
     ```bash
     cp .env.example .env
     ```
@@ -42,19 +45,19 @@ O servidor estará rodando em `http://localhost:8080` ou na `porta especificada 
 
 Você pode usar ferramentas como [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/) ou `curl` para testar.
 
-* **GET - Obter todos os jogos:**
-    ```bash
-    curl http://localhost:8080/api/jogos
-    ```
-* **POST - Inserir um novo jogo:**
-    ```bash
-    curl -X POST http://localhost:8080/api/jogos \
-    -H "Content-Type: application/json" \
-    -d '{
-          "nome": "Hollow Knight: Silksong",
-          "ano": 2025
-        }'
-    ```
+- **GET - Obter todos os jogos:**
+  ```bash
+  curl http://localhost:8080/api/jogos
+  ```
+- **POST - Inserir um novo jogo:**
+  ```bash
+  curl -X POST http://localhost:8080/api/jogos \
+  -H "Content-Type: application/json" \
+  -d '{
+        "nome": "Hollow Knight: Silksong",
+        "ano": 2025
+      }'
+  ```
 
 ---
 
@@ -72,5 +75,7 @@ O **GitHub Flow** é um workflow simples onde temos poucas branches para gerir e
 4.  **Agilidade:** Permite que as features sejam integradas à `main` assim que estiverem prontas, sem a necessidade de esperar por uma "release" formal, o que acelera o ciclo de desenvolvimento.
 
 Para este projeto, a branch `main` continha apenas o gitignore. E a cada nova funcionalidade (`GET /api/jogos`) e (`POST /api/jogos/add`) foi desenvolvida em uma branch `feature` e, após finalizada e testada, seria integrada à `main` via Pull Request.
+
 ```eof
 
+```

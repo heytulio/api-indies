@@ -4,13 +4,28 @@
   "description": "api de gc2",
   "main": "app.js",
   "scripts": {
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
     "test": "jest",
     "seed": "node ./seed/seed.js",
-    "start": "nodemon app.js"
+    "start": "nodemon server.js"
   },
   "jest": {
-    "setupFilesAfterEnv": ["./tests/setup.js"],
-    "testEnvironment": "node"
+    "setupFilesAfterEnv": [
+      "./tests/setup.js"
+    ],
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
   },
   "author": "troot",
   "license": "ISC",
@@ -21,6 +36,8 @@
     "nodemon": "^3.1.10"
   },
   "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
     "jest": "^30.2.0",
     "mongodb-memory-server": "^10.2.1",
     "supertest": "^7.1.4"
