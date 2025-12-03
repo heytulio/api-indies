@@ -3,7 +3,7 @@
 [![Docker Hub](https://img.shields.io/docker/pulls/troot0/api-indies?logo=docker)](https://hub.docker.com/r/troot0/api-indies)
 [![CI/CD](https://github.com/heytulio/api-indies/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/heytulio/api-indies/actions)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen?logo=node.js)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/mongodb-7.0-green?logo=mongodb)](https://www.mongodb.com/)
+[![MongoDB](https://img.shields.io/badge/mongodb-4.4-green?logo=mongodb)](https://www.mongodb.com/)
 
 API REST para gerenciamento de jogos indies desenvolvida com Node.js, Express e MongoDB. Criada para a disciplina de Gestão de Configuração II.
 
@@ -21,6 +21,7 @@ API REST para gerenciamento de jogos indies desenvolvida com Node.js, Express e 
 - [Testando os Endpoints](#-testando-os-endpoints)
 - [Workflow de Desenvolvimento](#-workflow-de-desenvolvimento-git)
 - [CI/CD](#-cicd)
+- [Infraestrutura e Deploy (Ansible)](#%EF%B8%8F-infraestrutura-e-deploy-ansible)
 - [Tecnologias](#-tecnologias)
 
 ---
@@ -29,10 +30,12 @@ API REST para gerenciamento de jogos indies desenvolvida com Node.js, Express e 
 
 - ✅ Listagem de jogos indies
 - ✅ Cadastro de novos jogos
+- ✅ Deleção de jogos
 - ✅ Persistência com MongoDB
 - ✅ Containerização com Docker
 - ✅ CI/CD com GitHub Actions
 - ✅ Imagem publicada no Docker Hub
+- ✅ Deploy automatizado com Ansible
 
 ---
 
@@ -50,7 +53,7 @@ http://localhost:8080/api
 | ------ | ------------------- | ---------------------------------- | ---------------------------------------------------------- |
 | `GET`  | `/api/jogos`        | Retorna todos os jogos cadastrados | -                                                          |
 | `POST` | `/api/jogos/add`    | Adiciona um novo jogo              | `{ "nome": "string", "ano": number, "criador": "string" }` |
-| `POST` | `/api/jogos/delete` | Deleta um jogo                     | `{ "id: "string" }`                                        |
+| `POST` | `/api/jogos/delete` | Deleta um jogo                     | `{ "id": "string" }`                                       |
 
 ### Exemplos de Resposta
 
@@ -224,6 +227,16 @@ curl -X POST http://localhost:8080/api/jogos/add \
   }'
 ```
 
+### POST - Deletar um jogo
+
+```bash
+curl -X POST http://localhost:8080/api/jogos/delete \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "507f191e810c19729de860eb"
+  }'
+```
+
 ---
 
 ## 🔄 Workflow de Desenvolvimento (Git)
@@ -248,7 +261,7 @@ main (protegida)
   │
   ├── feature-post-jogos → PR → merge
   │
-  └── feature... → PR → merge
+  └── feature-delete-jogos → PR → merge
 ```
 
 1. Criar branch a partir de `main`
@@ -280,16 +293,85 @@ O workflow roda automaticamente a cada push e pull request.
 
 ---
 
+## ⚙️ Infraestrutura e Deploy (Ansible)
+
+Este projeto utiliza Ansible para automatizar o provisionamento do servidor e o deploy da aplicação. O playbook configura o ambiente do zero, instalando dependências e subindo os containers.
+
+### Estrutura
+
+Os arquivos de infraestrutura estão localizados na pasta `ansible/`:
+
+- **`inventory`**: Lista os IPs dos servidores de destino (Grupo `[api-servers]`)
+- **`configure-node.yaml`**: Playbook principal que define as tarefas de configuração
+
+### O que o Playbook faz?
+
+O script `configure-node.yaml` executa as seguintes etapas automaticamente no servidor remoto:
+
+1. **Dependências do Sistema**: Instala pacotes essenciais (git, curl, ca-certificates, etc.)
+2. **Docker Engine**: Baixa e instala a versão oficial do Docker
+3. **Docker Compose**: Instala o Docker Compose Standalone
+4. **Setup do Projeto**:
+   - Cria o diretório `/opt/api-indies`
+   - Clona a branch `main` do repositório GitHub
+   - Configura o arquivo `.env`
+5. **Deploy**: Executa o build e inicia os containers (`docker-compose up -d --build`)
+
+### Como Executar o Deploy
+
+#### Pré-requisitos
+
+- Ansible instalado na máquina de controle (seu PC/WSL)
+- Pacote `sshpass` instalado (para autenticação via senha)
+- Acesso SSH ao servidor de destino configurado no arquivo `ansible/inventory`
+
+#### Comando
+
+Execute o comando abaixo na raiz do projeto:
+
+```bash
+ansible-playbook -i ansible/inventory ansible/configure-node.yaml -u <SEU_USUARIO> -k -K
+```
+
+**Legenda das flags:**
+
+- `-i ansible/inventory`: Define o arquivo de inventário
+- `-u <SEU_USUARIO>`: Usuário SSH remoto (ex: `aluno` ou `ubuntu`)
+- `-k`: Solicita a senha SSH
+- `-K`: Solicita a senha de sudo (become)
+
+#### Exemplo Prático
+
+```bash
+ansible-playbook -i ansible/inventory ansible/configure-node.yaml -u ubuntu -k -K
+```
+
+### Arquivos de Configuração
+
+#### `ansible/inventory`
+
+```
+[api-servers]
+seu-servidor.com ou IP
+```
+
+#### `ansible/configure-node.yaml`
+
+Veja o arquivo no diretório `ansible/` para detalhes completos do playbook.
+
+---
+
 ## 🛠️ Tecnologias
 
-| Tecnologia                                         | Versão | Descrição                  |
-| -------------------------------------------------- | ------ | -------------------------- |
-| [Node.js](https://nodejs.org/)                     | 18+    | Runtime JavaScript         |
-| [Express](https://expressjs.com/)                  | 4.x    | Framework web              |
-| [MongoDB](https://www.mongodb.com/)                | 6.0    | Banco de dados NoSQL       |
-| [Mongoose](https://mongoosejs.com/)                | 7.x    | ODM para MongoDB           |
-| [Docker](https://www.docker.com/)                  | -      | Containerização            |
-| [Docker Compose](https://docs.docker.com/compose/) | -      | Orquestração de containers |
+| Tecnologia                                         | Versão | Descrição                   |
+| -------------------------------------------------- | ------ | --------------------------- |
+| [Node.js](https://nodejs.org/)                     | 18+    | Runtime JavaScript          |
+| [Express](https://expressjs.com/)                  | 4.x    | Framework web               |
+| [MongoDB](https://www.mongodb.com/)                | 4.4    | Banco de dados NoSQL        |
+| [Mongoose](https://mongoosejs.com/)                | 7.x    | ODM para MongoDB            |
+| [Docker](https://www.docker.com/)                  | -      | Containerização             |
+| [Docker Compose](https://docs.docker.com/compose/) | -      | Orquestração de containers  |
+| [Ansible](https://www.ansible.com/)                | 2.x    | Automação de Infraestrutura |
 
 ### Estrutura do Projeto
 
@@ -297,12 +379,16 @@ O workflow roda automaticamente a cada push e pull request.
 api-indies/
 ├── .github/
 │   └── workflows/
-│       └── ci-cd.yml          # Pipeline CI/CD
-├── server.js                   # Aplicação principal
-├── Dockerfile                  # Build da imagem
-├── docker-compose.yml          # Orquestração
-├── package.json                # Dependências
-├── .env.example                # Template de variáveis
+│       └── main.yml               # Pipeline CI/CD
+├── ansible/                       # Infraestrutura como Código
+│   ├── inventory                  # Inventário de servidores
+│   ├── configure-node.yaml        # Playbook de configuração
+│   └── .env.example               # Template de variáveis
+├── server.js                      # Aplicação principal
+├── Dockerfile                     # Build da imagem
+├── docker-compose.yml             # Orquestração
+├── package.json                   # Dependências
+├── .env.example                   # Template de variáveis
 ├── .gitignore
 └── README.md
 ```
@@ -314,11 +400,11 @@ api-indies/
 Você pode usar a imagem publicada diretamente do Docker Hub:
 
 ```bash
-docker pull heytulio/api-indies:latest
+docker pull troot0/api-indies:latest
 
 docker run -p 8080:8080 \
   -e DATABASE_URL=mongodb://host.docker.internal:27017/api-indies \
-  heytulio/api-indies:latest
+  troot0/api-indies:latest
 ```
 
 Ou no `docker-compose.yml`:
@@ -326,7 +412,7 @@ Ou no `docker-compose.yml`:
 ```yaml
 services:
   app:
-    image: heytulio/api-indies:latest
+    image: troot0/api-indies:latest
     ports:
       - '8080:8080'
     environment:
