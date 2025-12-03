@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-indies-app
+    ports:
+      - '8080:8080'
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mongodb://admin:admin123@api-indies-db:27017/api-indies?authSource=admin&directConnection=true
+      PORT: 8080
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - api-indie-network
+    restart: unless-stopped
+    command: npm start
+
+  mongodb:
+    image: mongo:6.0
+    container_name: api-indies-db
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: api-indies
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - api-indie-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+networks:
+  api-indie-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+    driver: local
