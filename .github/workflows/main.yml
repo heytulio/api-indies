@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME: heytulio/api-indies # Ajuste para seu usuário Docker Hub
+  IMAGE_NAME: troot0/api-indies # Ajuste para seu usuário Docker Hub
 
 jobs:
   linter:
