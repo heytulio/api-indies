@@ -22,13 +22,13 @@ services:
     command: npm start
 
   mongodb:
-    image: mongo:6.0
+    image: mongo:4.4.18
     container_name: api-indies-db
     ports:
       - '27017:27017'
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_ROOT_USERNAME: username
+      MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: api-indies
     volumes:
       - mongodb-data:/data/db
