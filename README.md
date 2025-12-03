@@ -39,21 +39,23 @@ API REST para gerenciamento de jogos indies desenvolvida com Node.js, Express e 
 ## 🛣️ Rotas da API
 
 ### Base URL
+
 ```
 http://localhost:8080/api
 ```
 
 ### Endpoints
 
-| Método | Rota | Descrição | Body |
-|--------|------|-----------|------|
-| `GET` | `/api/jogos` | Retorna todos os jogos cadastrados | - |
-| `POST` | `/api/jogos/add` | Adiciona um novo jogo | `{ "nome": "string", "ano": number, "criador": "string" }` |
-| `POST` | `/api/jogos/delete` | Deleta um jogo | `{ "id: "string" }` |
+| Método | Rota                | Descrição                          | Body                                                       |
+| ------ | ------------------- | ---------------------------------- | ---------------------------------------------------------- |
+| `GET`  | `/api/jogos`        | Retorna todos os jogos cadastrados | -                                                          |
+| `POST` | `/api/jogos/add`    | Adiciona um novo jogo              | `{ "nome": "string", "ano": number, "criador": "string" }` |
+| `POST` | `/api/jogos/delete` | Deleta um jogo                     | `{ "id: "string" }`                                        |
 
 ### Exemplos de Resposta
 
 **GET /api/jogos**
+
 ```json
 [
   {
@@ -74,6 +76,7 @@ http://localhost:8080/api
 ```
 
 **POST /api/jogos/add**
+
 ```json
 {
   "_id": "507f191e810c19729de860eb",
@@ -85,6 +88,7 @@ http://localhost:8080/api
 ```
 
 **POST /api/jogos/delete**
+
 ```json
 {
   "_id": "507f191e810c19729de860eb"
@@ -98,28 +102,33 @@ http://localhost:8080/api
 ### Com Docker (Recomendado)
 
 #### Pré-requisitos
+
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 #### Passos
 
 1. **Clone o repositório:**
+
    ```bash
    git clone https://github.com/heytulio/api-indies.git
    cd api-indies
    ```
 
 2. **Configure as variáveis de ambiente:**
+
    ```bash
    cp .env.example .env
    ```
 
 3. **Inicie os containers:**
+
    ```bash
    docker-compose up -d
    ```
 
 4. **Verifique os logs:**
+
    ```bash
    docker-compose logs -f app
    ```
@@ -151,6 +160,7 @@ docker-compose down -v
 ### Sem Docker (Local)
 
 #### Pré-requisitos
+
 - [Node.js](https://nodejs.org/) (versão 18 ou superior)
 - [MongoDB](https://www.mongodb.com/try/download/community) instalado e rodando
 - npm (vem com Node.js)
@@ -158,23 +168,27 @@ docker-compose down -v
 #### Passos
 
 1. **Clone o repositório:**
+
    ```bash
    git clone https://github.com/heytulio/api-indies.git
    cd api-indies
    ```
 
 2. **Instale as dependências:**
+
    ```bash
    npm install
    ```
 
 3. **Configure o .env:**
+
    ```bash
    cp .env.example .env
    # Edite .env e configure DATABASE_URL=mongodb://localhost:27017/api-indies
    ```
 
 4. **Inicie o MongoDB:**
+
    ```bash
    mongod
    ```
@@ -193,11 +207,13 @@ O servidor estará rodando em `http://localhost:8080`.
 Você pode usar [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/) ou `curl`:
 
 ### GET - Listar todos os jogos
+
 ```bash
 curl http://localhost:8080/api/jogos
 ```
 
 ### POST - Adicionar um novo jogo
+
 ```bash
 curl -X POST http://localhost:8080/api/jogos/add \
   -H "Content-Type: application/json" \
@@ -266,14 +282,14 @@ O workflow roda automaticamente a cada push e pull request.
 
 ## 🛠️ Tecnologias
 
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| [Node.js](https://nodejs.org/) | 18+ | Runtime JavaScript |
-| [Express](https://expressjs.com/) | 4.x | Framework web |
-| [MongoDB](https://www.mongodb.com/) | 6.0 | Banco de dados NoSQL |
-| [Mongoose](https://mongoosejs.com/) | 7.x | ODM para MongoDB |
-| [Docker](https://www.docker.com/) | - | Containerização |
-| [Docker Compose](https://docs.docker.com/compose/) | - | Orquestração de containers |
+| Tecnologia                                         | Versão | Descrição                  |
+| -------------------------------------------------- | ------ | -------------------------- |
+| [Node.js](https://nodejs.org/)                     | 18+    | Runtime JavaScript         |
+| [Express](https://expressjs.com/)                  | 4.x    | Framework web              |
+| [MongoDB](https://www.mongodb.com/)                | 6.0    | Banco de dados NoSQL       |
+| [Mongoose](https://mongoosejs.com/)                | 7.x    | ODM para MongoDB           |
+| [Docker](https://www.docker.com/)                  | -      | Containerização            |
+| [Docker Compose](https://docs.docker.com/compose/) | -      | Orquestração de containers |
 
 ### Estrutura do Projeto
 
@@ -312,7 +328,7 @@ services:
   app:
     image: heytulio/api-indies:latest
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       DATABASE_URL: mongodb://mongodb:27017/api-indies
 ```
