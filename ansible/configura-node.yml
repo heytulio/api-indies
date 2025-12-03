@@ -1,0 +1,55 @@
+---
+- name: Deploy API Indies
+  hosts: api-servers
+  become: true
+
+  tasks:
+    - name: Instalar dependências básicas
+      apt:
+        name:
+          - git
+          - curl
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+        state: present
+        update_cache: yes
+
+    - name: Instalar Docker (via script oficial)
+      shell: |
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sh get-docker.sh
+      args:
+        creates: /usr/bin/docker
+
+    - name: Instalar Docker Compose
+      shell: |
+        curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+      args:
+        creates: /usr/local/bin/docker-compose
+
+    - name: Criar diretório da aplicação
+      file:
+        path: /opt/api-indies
+        state: directory
+        mode: '0755'
+
+    - name: Clonar repositório
+      git:
+        repo: https://github.com/heytulio/api-indies.git
+        dest: /opt/api-indies
+        version: main
+        force: yes
+
+    - name: Copiar .env (da própria VM)
+      copy:
+        src: /opt/api-indies/.env.example
+        dest: /opt/api-indies/.env
+        remote_src: yes
+        force: no
+
+    - name: Iniciar containers
+      shell: 'docker-compose up -d --build'
+      args:
+        chdir: /opt/api-indies
